@@ -1,39 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import {
   LayoutDashboard,
-  Calendar,
+  Users,
   BarChart3,
+  ShieldCheck,
   Settings,
   LogOut,
   Search,
   Bell,
-  HelpCircle,
+  Calendar,
   Menu,
   X,
 } from "lucide-react";
-import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 const NAV_ITEMS = [
-  { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/upcoming", icon: Calendar, label: "Lịch trình" },
-  { href: "/analytics", icon: BarChart3, label: "Báo cáo" },
-  { href: "/settings", icon: Settings, label: "Cài đặt" },
+  { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin#users", icon: Users, label: "Người dùng" },
+  { href: "/admin#reports", icon: BarChart3, label: "Báo cáo" },
+  { href: "/admin#system", icon: ShieldCheck, label: "Hệ thống" },
 ];
 
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
   const supabase = createClient();
 
   const handleLogout = async () => {
@@ -41,8 +37,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     router.push("/login");
     router.refresh();
   };
-
-  const title = NAV_ITEMS.find((i) => i.href === pathname)?.label ?? "Dashboard";
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">
@@ -61,19 +55,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {/* Logo */}
         <div className="flex items-center gap-3 px-2 py-4">
           <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20">
-            <Calendar size={24} />
+            <ShieldCheck size={24} />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground tracking-tight">ScheduleMe</h1>
-            <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Smart Planner</p>
+            <h1 className="text-lg font-bold text-foreground tracking-tight">TimeFlow</h1>
+            <p className="text-[10px] uppercase tracking-widest text-amber-500 font-bold">Admin Panel</p>
           </div>
         </div>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-1">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Menu chính</span>
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Quản trị</span>
           {NAV_ITEMS.map((item) => (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               onClick={() => setSidebarOpen(false)}
@@ -86,19 +80,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             >
               <item.icon size={18} className={pathname === item.href ? "text-primary" : "text-muted-foreground group-hover:text-foreground transition-colors"} />
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
         {/* Bottom */}
         <div className="mt-auto flex flex-col gap-1 border-t border-border pt-4">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          <a
+            href="/"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground text-sm font-medium transition-colors"
           >
-            <Settings size={18} className="text-muted-foreground" />
-            {theme === "dark" ? "Light Mode" : "Dark Mode"}
-          </button>
+            <Calendar size={18} className="text-muted-foreground" />
+            Về trang người dùng
+          </a>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive text-sm font-medium transition-colors"
@@ -117,27 +111,23 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-foreground">
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <h2 className="text-lg font-bold text-foreground">{title}</h2>
+            <h2 className="text-lg font-bold text-foreground">Quản trị hệ thống</h2>
           </div>
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center bg-secondary border border-border rounded-full px-4 py-1.5 w-64 focus-within:border-primary transition-all">
               <Search size={16} className="text-muted-foreground" />
-              <Input
+              <input
+                type="text"
                 placeholder="Tìm kiếm..."
-                className="bg-transparent border-none focus:ring-0 text-sm text-foreground placeholder:text-muted-foreground w-full ml-2 p-0 h-auto"
+                className="bg-transparent border-none focus:ring-0 text-sm text-foreground placeholder:text-muted-foreground w-full ml-2 outline-none"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <button className="p-2 text-muted-foreground hover:bg-accent rounded-full transition-colors relative">
-                <Bell size={20} />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-card" />
-              </button>
-              <button className="p-2 text-muted-foreground hover:bg-accent rounded-full transition-colors">
-                <HelpCircle size={20} />
-              </button>
-              <div className="h-8 w-8 rounded-full bg-primary/20 border border-primary/30 overflow-hidden ml-2 cursor-pointer flex items-center justify-center">
-                <span className="text-primary text-xs font-bold">U</span>
-              </div>
+            <button className="p-2 text-muted-foreground hover:bg-accent rounded-full transition-colors relative">
+              <Bell size={20} />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full border-2 border-card" />
+            </button>
+            <div className="h-8 w-8 rounded-full bg-amber-500/20 border border-amber-500/30 overflow-hidden ml-2 flex items-center justify-center">
+              <ShieldCheck size={16} className="text-amber-500" />
             </div>
           </div>
         </header>
