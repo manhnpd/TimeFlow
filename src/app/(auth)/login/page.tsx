@@ -24,8 +24,17 @@ export default function LoginPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) { toast.error(error.message); setLoading(false); return; }
+
+    // Fetch role to redirect
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("user_id", (await supabase.auth.getUser()).data.user?.id)
+      .single();
+
+    const isAdmin = profile?.role === 1;
     toast.success("Chào mừng bạn quay lại!");
-    router.push("/");
+    router.push(isAdmin ? "/admin" : "/");
     router.refresh();
   };
 

@@ -3,6 +3,22 @@
 import { createClient } from "@/lib/supabase/server";
 import { type EventCategory } from "@/types";
 
+export async function getUserRole(): Promise<number> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return 0;
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", user.id)
+    .single();
+
+  return data?.role ?? 0;
+}
+
 export async function getEvents(startDate?: string, endDate?: string) {
   const supabase = await createClient();
   const {
