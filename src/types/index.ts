@@ -44,19 +44,57 @@ export const EVENT_COLORS = [
 ] as const;
 
 export const CATEGORIES: { value: EventCategory; label: string; color: string }[] = [
-  { value: "work", label: "Work", color: "#3b82f6" },
-  { value: "personal", label: "Personal", color: "#8b5cf6" },
-  { value: "health", label: "Health", color: "#10b981" },
-  { value: "study", label: "Study", color: "#f97316" },
-  { value: "entertainment", label: "Entertainment", color: "#ec4899" },
-  { value: "other", label: "Other", color: "#06b6d4" },
+  { value: "work", label: "Công việc", color: "#3b82f6" },
+  { value: "personal", label: "Cá nhân", color: "#8b5cf6" },
+  { value: "health", label: "Sức khỏe", color: "#10b981" },
+  { value: "study", label: "Học tập", color: "#f97316" },
+  { value: "entertainment", label: "Giải trí", color: "#ec4899" },
+  { value: "other", label: "Khác", color: "#06b6d4" },
 ];
 
 export const REMINDER_OPTIONS = [
-  { label: "5 minutes", value: 5 },
-  { label: "15 minutes", value: 15 },
-  { label: "30 minutes", value: 30 },
-  { label: "1 hour", value: 60 },
-  { label: "1 day", value: 1440 },
-  { label: "2 days", value: 2880 },
+  { label: "5 phút", value: 5 },
+  { label: "15 phút", value: 15 },
+  { label: "30 phút", value: 30 },
+  { label: "1 giờ", value: 60 },
+  { label: "1 ngày", value: 1440 },
+  { label: "2 ngày", value: 2880 },
 ] as const;
+
+export interface AdminUser {
+  userId: string;
+  fullName: string;
+  email: string;
+  role: number;
+  createdAt: string;
+  eventCount: number;
+  lastActive: string | null;
+}
+
+export interface AdminStats {
+  totalUsers: number;
+  totalEvents: number;
+  eventsToday: number;
+  newUsersThisWeek: number;
+  activeUsersThisWeek: number;
+  weeklyActivity: { name: string; completed: number; pending: number }[];
+}
+
+export interface AdminAnalyticsData {
+  totalEvents: number;
+  totalHours: number;
+  avgPerUser: string;
+  categoryDistribution: { name: string; value: number }[];
+  dailyTrend: { date: string; count: number }[];
+  weeklyTrend: { week: string; count: number }[];
+  topUsers: { userId: string; fullName: string; eventCount: number; totalHours: number }[];
+}
+
+export interface SystemHealth {
+  dbStatus: "operational" | "degraded" | "down";
+  dbLatencyMs: number;
+  totalUsers: number;
+  totalEvents: number;
+  lastCronRun: string | null;
+  recentActivity: { id: string; action: string; timestamp: string; details: string }[];
+}

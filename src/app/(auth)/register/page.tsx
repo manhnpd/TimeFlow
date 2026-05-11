@@ -12,6 +12,7 @@ import { motion } from "motion/react";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,14 @@ export default function RegisterPage() {
     if (password !== confirmPassword) { toast.error("Mật khẩu không khớp"); return; }
     if (password.length < 6) { toast.error("Mật khẩu phải có ít nhất 6 ký tự"); return; }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName || email.split("@")[0] },
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
+    });
     if (error) { toast.error(error.message); setLoading(false); return; }
     toast.success("Tài khoản đã tạo! Vui lòng kiểm tra email.");
     router.push("/login");
@@ -76,6 +84,17 @@ export default function RegisterPage() {
             </div>
 
             <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Họ tên</label>
+                <Input
+                  type="text"
+                  placeholder="Nguyễn Văn A"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className="h-12 bg-secondary border-border/50 rounded-xl focus:border-primary"
+                />
+              </div>
+
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest ml-1">Email</label>
                 <Input

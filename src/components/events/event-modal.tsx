@@ -38,7 +38,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 const eventSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  title: z.string().min(1, "Vui lòng nhập tiêu đề"),
   description: z.string(),
   start_time: z.string().min(1),
   end_time: z.string().min(1),
@@ -136,7 +136,7 @@ export function EventModal() {
           toast.error(result.error);
         } else if (result.event) {
           updateEventStore(result.event);
-          toast.success("Event updated successfully");
+          toast.success("Đã cập nhật sự kiện");
           closeEventModal();
         }
       } else {
@@ -149,12 +149,12 @@ export function EventModal() {
           toast.error(result.error);
         } else if (result.event) {
           addEvent(result.event);
-          toast.success("Event created successfully");
+          toast.success("Đã tạo sự kiện");
           closeEventModal();
         }
       }
     } catch {
-      toast.error("Something went wrong");
+      toast.error("Đã có lỗi xảy ra");
     } finally {
       setLoading(false);
     }
@@ -168,7 +168,7 @@ export function EventModal() {
       toast.error(result.error);
     } else {
       removeEvent(selectedEvent.id);
-      toast.success("Event deleted");
+      toast.success("Đã xóa sự kiện");
       closeEventModal();
     }
     setLoading(false);
@@ -179,17 +179,17 @@ export function EventModal() {
       <DialogContent className="sm:max-w-[520px] bg-card border-border p-0 gap-0">
         <DialogHeader className="p-6 pb-4 border-b border-border">
           <DialogTitle className="text-lg font-semibold">
-            {isEditing ? "Edit Event" : "New Event"}
+            {isEditing ? "Chỉnh sửa sự kiện" : "Sự kiện mới"}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-5">
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
+            <Label htmlFor="title">Tiêu đề *</Label>
             <Input
               id="title"
-              placeholder="Event title"
+              placeholder="Nhập tiêu đề sự kiện"
               {...form.register("title")}
               className="h-10 bg-surface-container-low dark:bg-surface-container-low border-outline-variant/30"
             />
@@ -202,10 +202,10 @@ export function EventModal() {
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Mô tả</Label>
             <Textarea
               id="description"
-              placeholder="Add a description..."
+              placeholder="Thêm mô tả..."
               rows={2}
               {...form.register("description")}
               className="bg-surface-container-low dark:bg-surface-container-low border-outline-variant/30 resize-none"
@@ -214,7 +214,7 @@ export function EventModal() {
 
           {/* All Day Toggle */}
           <div className="flex items-center justify-between">
-            <Label className="text-sm">All Day</Label>
+            <Label className="text-sm">Cả ngày</Label>
             <Switch
               checked={form.watch("all_day")}
               onCheckedChange={(checked) => form.setValue("all_day", checked)}
@@ -224,7 +224,7 @@ export function EventModal() {
           {/* Date/Time */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Start</Label>
+              <Label>Bắt đầu</Label>
               <Input
                 type={form.watch("all_day") ? "date" : "datetime-local"}
                 {...form.register("start_time")}
@@ -232,7 +232,7 @@ export function EventModal() {
               />
             </div>
             <div className="space-y-2">
-              <Label>End</Label>
+              <Label>Kết thúc</Label>
               <Input
                 type={form.watch("all_day") ? "date" : "datetime-local"}
                 {...form.register("end_time")}
@@ -243,7 +243,7 @@ export function EventModal() {
 
           {/* Category */}
           <div className="space-y-2">
-            <Label>Category</Label>
+            <Label>Danh mục</Label>
             <Select
               value={form.watch("category")}
               onValueChange={(val) =>
@@ -271,7 +271,7 @@ export function EventModal() {
 
           {/* Color */}
           <div className="space-y-2">
-            <Label>Color</Label>
+            <Label>Màu sắc</Label>
             <div className="flex gap-2">
               {EVENT_COLORS.map((c) => (
                 <button
@@ -291,7 +291,7 @@ export function EventModal() {
 
           {/* Reminders */}
           <div className="space-y-2">
-            <Label>Reminders</Label>
+            <Label>Nhắc nhở</Label>
             <div className="flex flex-wrap gap-2">
               {REMINDER_OPTIONS.map((opt) => (
                 <Badge
@@ -322,7 +322,7 @@ export function EventModal() {
                 className="text-destructive hover:text-destructive mr-auto"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
-                Delete
+                Xóa
               </Button>
             )}
             <Button
@@ -332,7 +332,7 @@ export function EventModal() {
               onClick={closeEventModal}
               disabled={loading}
             >
-              Cancel
+              Hủy
             </Button>
             <Button
               type="submit"
@@ -341,7 +341,7 @@ export function EventModal() {
               className="bg-primary text-primary-foreground"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin mr-1" />}
-              {isEditing ? "Save Changes" : "Create Event"}
+              {isEditing ? "Lưu thay đổi" : "Tạo sự kiện"}
             </Button>
           </DialogFooter>
         </form>

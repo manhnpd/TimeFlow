@@ -21,9 +21,9 @@ import { useTheme } from "next-themes";
 
 const NAV_ITEMS = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-  { href: "/admin#users", icon: Users, label: "Người dùng" },
-  { href: "/admin#reports", icon: BarChart3, label: "Báo cáo" },
-  { href: "/admin#system", icon: ShieldCheck, label: "Hệ thống" },
+  { href: "/admin/users", icon: Users, label: "Người dùng" },
+  { href: "/admin/reports", icon: BarChart3, label: "Báo cáo" },
+  { href: "/admin/system", icon: ShieldCheck, label: "Hệ thống" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

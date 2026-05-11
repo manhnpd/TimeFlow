@@ -47,6 +47,12 @@ CREATE POLICY "Users can update own profile"
   ON profiles FOR UPDATE
   USING (auth.uid() = user_id);
 
+-- Allow trigger to insert profiles on signup
+-- SECURITY DEFINER bypasses RLS, but explicit policy ensures compatibility
+CREATE POLICY "Allow profile creation on signup"
+  ON profiles FOR INSERT
+  WITH CHECK (true);
+
 -- ============================================
 -- Events table
 CREATE TABLE IF NOT EXISTS events (
